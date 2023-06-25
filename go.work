@@ -1,0 +1,6 @@
+go 1.20
+
+use (
+	./golang_server
+	./golang_server/Encryptions
+)
