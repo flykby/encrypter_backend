@@ -2,16 +2,14 @@ package ru.flykby.rgr.java_server.service.encryption;
 
 public class Polybium implements Encryption {
 
-    public static int toDec(int n) {
-        int i = 0;
-        int sum = 0;
-        while (n > 0) {
-            sum += n % 10 * (int) (Math.pow(5, i));
-            n /= 10;
-            i++;
-        }
-        return sum;
-    }
+    private char[][] matrix = {
+        {'A', 'B', 'C', 'D', 'E'},
+        {'F', 'G', 'H', 'I', 'J'},
+        {'K', 'L', 'M', 'N', 'O'},
+        {'P', 'Q', 'R', 'S', 'T'},
+        {'U', 'V', 'W', 'X', 'Y'},
+        {'Z', ' ', '.', '?','!'}
+    };
 
     public String encrypted(String text, int key) {
         String encryptedText = "";
@@ -20,16 +18,14 @@ public class Polybium implements Encryption {
 
         for(int i = 0; i < arrayText.length; i++) {
             
-            int n = arrayText[i] - 'A';
-            if (arrayText[i] > 'I') {
-                n -= 1;
+            for (int x = 0; x < matrix.length; x++) {
+                for (int y = 0; y < matrix[x].length; y++) {
+                    if (arrayText[i] == matrix[x][y]) {
+                        encryptedText += String.format("%d ", (x + 1) * 10 + y + 1);
+                    }
+                }
             }
-            int n1 = n / 5 + 1;
-            int n2 = n % 5 + 1;
-            int k = n1 * 10 + n2;
-            encryptedText += k + " ";
             
-
         }
 
         return encryptedText;
@@ -38,7 +34,6 @@ public class Polybium implements Encryption {
     public String decrypted(String text, int key) {
         String[] words = text.split(" ");
         text = text.toUpperCase();
-        char[] arrayText = text.toCharArray();
         int[] arrayEncrypted = new int[words.length];
         for (int i = 0; i < arrayEncrypted.length; i++) {
             arrayEncrypted[i] = Integer.parseInt(words[i]);
@@ -47,10 +42,8 @@ public class Polybium implements Encryption {
         
         for (int i = 0; i < arrayEncrypted.length; i++) {
 
-            if (arrayText[i] > 'I'){
-                arrayEncrypted[i] += 1;
-            }
-            decryptedText += (char)(toDec(arrayEncrypted[i]) - 6 + 'A');
+            decryptedText += matrix[arrayEncrypted[i] / 10 - 1][arrayEncrypted[i] % 10 - 1];
+            // System.out.print(arrayEncrypted[i] / 10 + " ");
              
         }
         return decryptedText;

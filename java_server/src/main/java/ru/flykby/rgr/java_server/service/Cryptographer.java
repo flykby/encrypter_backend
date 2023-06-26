@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import ru.flykby.rgr.java_server.service.encryption.Atbash;
 import ru.flykby.rgr.java_server.service.encryption.Caesar;
 import ru.flykby.rgr.java_server.service.encryption.Encryption;
-import ru.flykby.rgr.java_server.service.encryption.Matrix;
 import ru.flykby.rgr.java_server.service.encryption.Polybium;
 import ru.flykby.rgr.java_server.service.encryption.Scytala;
 
@@ -18,7 +17,8 @@ public class Cryptographer {
     private Encryption encryption;
     
     public String encryption(int numberEncrypt, String text, int key) throws InvalidInputException {
-        if (1 < numberEncrypt && numberEncrypt > 5 || key < 0) {
+
+        if (1 < numberEncrypt && numberEncrypt > 4 || key < 0) {
             throw new InvalidInputException("Невернный ввод");
         }
 
@@ -32,16 +32,15 @@ public class Cryptographer {
                 break;
             }
             case 3: {
-                encryption = new Matrix();
-                break;
-            }
-            case 4: {
                 encryption = new Polybium();
                 break;
             }
-            default: {
+            case 4: {
                 encryption = new Scytala();
                 break;
+            }
+            default: {
+                return "Cann't encrypted";
             }
         }
         return encryption.encrypted(text, key);
@@ -49,7 +48,7 @@ public class Cryptographer {
     
     public String decryption(int numberEncrypt, String text, int key) throws InvalidInputException {
 
-        if (1 < numberEncrypt && numberEncrypt > 5 || key < 0) {
+        if (1 < numberEncrypt && numberEncrypt > 4 || key < 0) {
             throw new InvalidInputException("Невернный ввод");
         }
 
@@ -63,16 +62,15 @@ public class Cryptographer {
                 break;
             }
             case 3: {
-                encryption = new Matrix();
-                break;
-            }
-            case 4: {
                 encryption = new Polybium();
                 break;
             }
-            default: {
+            case 4: {
                 encryption = new Scytala();
                 break;
+            }
+            default: {
+                return "Cann't encrypted";
             }
         }
         return encryption.decrypted(text, key);

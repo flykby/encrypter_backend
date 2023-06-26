@@ -4,43 +4,64 @@ package ru.flykby.rgr.java_server.service.encryption;
 public class Scytala implements Encryption {
     
     public String encrypted(String text, int key) {
-        String encryptedText = "";
-        char[][] matrix = new char[text.length() / key + (text.length() % key != 0 ? 1 : 0)][key];
-        for (int i = 0; i < matrix.length; i++)
-            for (int j = 0; j < matrix[i].length; j++)
-                matrix[i][j] = ' ';
-
-        char[] arrayText = text.toCharArray();
-        for (int i = 0; i < arrayText.length; i++) {
-            matrix[i / key][i % key] = arrayText[i];
+        // Убедимся, что ключ больше 0
+        if (key <= 0) {
+            throw new IllegalArgumentException("Ключ должен быть положительным числом");
         }
 
-        for (int i = 0; i < key; i++) {
+        StringBuilder sb = new StringBuilder(text);
+
+        // Добавляем пробелы в конец сообщения, чтобы его длина была кратна ключу
+        while (sb.length() % key != 0) {
+            sb.append(" ");
+        }
+
+        char[][] matrix = new char[key][sb.length() / key];
+
+        // Заполняем матрицу символами из сообщения
+        int index = 0;
+        for (int i = 0; i < matrix[0].length; i++) {
             for (int j = 0; j < matrix.length; j++) {
-                encryptedText += matrix[j][i];
+                matrix[j][i] = sb.charAt(index++);
             }
         }
-        
-        return encryptedText;
+
+        // Считываем зашифрованное сообщение из матрицы
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j++) {
+                result.append(matrix[i][j]);
+            }
+        }
+
+        return result.toString();
     }
 
     public String decrypted(String text, int key) {
-        String decryptedText = "";
-        char[][] matrix = new char[text.length() / key + (text.length() % key != 0 ? 1 : 0)][key];
-        char[] arrayText = text.toCharArray();
-        int k = 0;
-        for (int i = 0; i < key; i++) {
-            for (int j = 0; j < matrix.length; j++) {
-                matrix[j][i] = arrayText[k++];
+        if (key <= 0) {
+            throw new IllegalArgumentException("Ключ должен быть положительным числом");
+        }
+
+        StringBuilder sb = new StringBuilder(text);
+
+        char[][] matrix = new char[key][sb.length() / key];
+
+        // Заполняем матрицу символами из сообщения
+        int index = 0;
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j++) {
+                matrix[i][j] = sb.charAt(index++);
             }
         }
 
-        for (int i = 0; i < matrix.length; i++) {
-            for (int j = 0; j < matrix[j].length; j++)
-                decryptedText += matrix[i][j];
+        // Считываем расшифрованное сообщение из матрицы
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < matrix[0].length; i++) {
+            for (int j = 0; j < matrix.length; j++) {
+                result.append(matrix[j][i]);
+            }
         }
-            
-        return decryptedText;
-    }
 
+        return result.toString().trim();
+    }
 }
