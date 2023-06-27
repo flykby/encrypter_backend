@@ -8,7 +8,7 @@ public class Polybium implements Encryption {
         {'K', 'L', 'M', 'N', 'O'},
         {'P', 'Q', 'R', 'S', 'T'},
         {'U', 'V', 'W', 'X', 'Y'},
-        {'Z', ' ', '.', '?','!'}
+        {'Z', ' ', '.', '?', '!'}
     };
 
     public String encrypted(String text, int key) {
