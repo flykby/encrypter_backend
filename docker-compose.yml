@@ -1,0 +1,11 @@
+services:
+  java:
+    build: java_server/
+    ports:
+      - "3001:3001"
+    command: java -jar ./build/libs/java_server.jar
+  go:
+    build: golang_server/
+    ports:
+      - "3002:3002"
+    command: go run ./main/main.go

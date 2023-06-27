@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-const HOST = 'http://0.0.0.0';
+const HOST = 'http://localhost';
 const PORT_GO = 3002;
 const PORT_JAVA = 3001;
 

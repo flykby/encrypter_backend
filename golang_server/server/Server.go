@@ -7,6 +7,11 @@ import (
 	"net/http"
 )
 
+const(
+	HOST = "0.0.0.0"
+	PORT = "3002"
+)
+
 type Req struct {
 	Text          string `json:"message"`
 	Key           string `json:"key"`
@@ -14,10 +19,10 @@ type Req struct {
 }
 
 func Start() {
-	http.HandleFunc("/encoding", ChooseEncrypt)
-	http.HandleFunc("/decoding", ChooseDecrypt)
+	http.HandleFunc("/api0/encrypted", ChooseEncrypt)
+	http.HandleFunc("/api0/decrypted", ChooseDecrypt)
 	fmt.Println("Server is started")
-	http.ListenAndServe("0.0.0.0:3002", nil)
+	http.ListenAndServe(HOST+":"+PORT, nil)
 }
 
 func GetInfo(w http.ResponseWriter, r *http.Request) (Req, error) {
