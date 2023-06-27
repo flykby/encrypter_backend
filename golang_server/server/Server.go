@@ -17,7 +17,7 @@ func Start() {
 	http.HandleFunc("/encoding", ChooseEncrypt)
 	http.HandleFunc("/decoding", ChooseDecrypt)
 	fmt.Println("Server is started")
-	http.ListenAndServe("0.0.0.0:44555", nil)
+	http.ListenAndServe("0.0.0.0:3002", nil)
 }
 
 func GetInfo(w http.ResponseWriter, r *http.Request) (Req, error) {
