@@ -1,7 +1,7 @@
 const axios = require('axios');
 
-const HOST = 'http://localhost';
-const PORT_GO = 8181;
+const HOST = 'http://0.0.0.0';
+const PORT_GO = 3002;
 const PORT_JAVA = 3001;
 
 class controller {
