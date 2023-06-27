@@ -3,10 +3,6 @@ plugins {
 	id 'org.springframework.boot' version '3.1.0'
 	id 'io.spring.dependency-management' version '1.1.0'
 }
-
-group = 'ru.flykby.rgr'
-version = '0.0.1-SNAPSHOT'
-
 java {
 	sourceCompatibility = '17'
 }
@@ -24,4 +20,9 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+jar {
+    baseName = 'java-grandle'
+    version =  '0.1.0'
 }
