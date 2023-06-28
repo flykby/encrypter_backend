@@ -7,8 +7,15 @@ import (
 
 // Функция для шифрования сообщения
 func EncryptAffine(message, key string) string {
+	message = strings.ReplaceAll(message, " ", "")
+	if !IsLetter(message) {
+		return "Wrong input message"
+	}
+	if IsLetter(key) {
+		return "Wrong input key"
+	}
 	keyslice := invert(key)
-	message = prepareMessage(message)
+
 	encryptedMessage := ""
 	for i := 0; i < len(message); i++ {
 		encryptedChar := int(math.Mod(float64((int(message[i])-'a')*keyslice[0]+keyslice[1]), 26))
@@ -19,8 +26,15 @@ func EncryptAffine(message, key string) string {
 
 // Функция для дешифрования сообщения
 func DecryptAffine(message, key string) string {
+	message = strings.ReplaceAll(message, " ", "")
+	if !IsLetter(message) {
+		return "Wrong input message"
+	}
+	if IsLetter(key) {
+		return "Wrong input key"
+	}
 	keyslice := invert(key)
-	message = prepareMessage(message)
+
 	decryptedMessage := ""
 	inverseA := inverseElement(keyslice[0], 26)
 	for i := 0; i < len(message); i++ {
@@ -38,10 +52,4 @@ func inverseElement(a int, m int) int {
 		}
 	}
 	panic("Inverse element not found")
-}
-
-// Функция для подготовки сообщения
-func prepareMessage(message string) string {
-	message = strings.ReplaceAll(message, " ", "")
-	return message
 }

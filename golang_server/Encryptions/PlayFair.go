@@ -1,22 +1,41 @@
 package encodings
 
 import (
+	"regexp"
 	"strings"
 )
 
+var IsLetter = regexp.MustCompile(`^[a-zA-Z]+$`).MatchString
+
+const (
+	KEY     = 1
+	MESSAGE = 2
+)
+
+func updateinfo(info string, def int) string {
+	info = strings.ToUpper(info)
+	info = strings.ReplaceAll(info, " ", "")
+	info = strings.ReplaceAll(info, "J", "I")
+	if def == MESSAGE {
+		info = removeDouble(info)
+		info = addPadding(info)
+	} else {
+		info = removeDuplicates(info)
+	}
+	return info
+}
+
 // Зашифровка
 func EncryptPlayfair(message, key string) string {
-	key = strings.ToUpper(key)
-	key = strings.ReplaceAll(key, "J", "I")
-	key = removeDuplicates(key)
+	key = updateinfo(key, KEY)
+	message = updateinfo(message, MESSAGE)
+	if !IsLetter(message) {
+		return "Wrong input message"
+	}
+	if !IsLetter(key) {
+		return "Wrong input key"
+	}
 	keymatrix := generateKeyMatrix(key)
-
-	message = strings.ToUpper(message)
-	message = strings.ReplaceAll(message, " ", "")
-	message = strings.ReplaceAll(message, "J", "I")
-	message = removeDouble(message)
-	message = addPadding(message)
-
 	encrypted := ""
 	for i := 0; i < len(message); i += 2 {
 		a := message[i]
@@ -38,18 +57,23 @@ func EncryptPlayfair(message, key string) string {
 }
 
 // Расшифровка
-func DecryptPlayfair(encrypted, key string) string {
-	key = strings.ToUpper(key)
-	key = strings.ReplaceAll(key, "J", "I")
-	key = removeDuplicates(key)
+func DecryptPlayfair(message, key string) string {
+	if !IsLetter(message) {
+		return "Wrong input message"
+	}
+	if !IsLetter(key) {
+		return "Wrong input key"
+	}
+
+	key = updateinfo(key, KEY)
 	keymatrix := generateKeyMatrix(key)
 
-	encrypted = strings.ToUpper(encrypted)
+	message = updateinfo(message, MESSAGE)
 
 	decrypted := ""
-	for i := 0; i < len(encrypted); i += 2 {
-		a := encrypted[i]
-		b := encrypted[i+1]
+	for i := 0; i < len(message); i += 2 {
+		a := message[i]
+		b := message[i+1]
 
 		row1, col1 := getPosition(keymatrix, rune(a))
 		row2, col2 := getPosition(keymatrix, rune(b))
@@ -167,7 +191,7 @@ func addDouble(s string) string {
 
 // Удаление символа для четных отшифрованных сообщений
 func removePadding(s string) string {
-	if len(s)%2 == 1 && s[len(s)-1] == 'X' {
+	if len(s)%2 == 0 && s[len(s)-1] == 'X' {
 		s = s[:len(s)-1]
 	}
 	return s

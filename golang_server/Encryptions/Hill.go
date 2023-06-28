@@ -8,25 +8,34 @@ import (
 
 // Функция для шифрования сообщения
 func EncryptHill(message, key string) string {
+	message = strings.ReplaceAll(message, " ", "")
+	if !IsLetter(message) {
+		return "Wrong input message"
+	}
+	if IsLetter(key) {
+		return "Wrong input key"
+	}
 	keyslice := invert(key)
 	keymatrix := getMatrixKey(keyslice)
+
 	//Добавляем недостающие символы
-	if len(message)%2 != 0 {
-		message += "x"
-	}
+	message = addPadding(message)
+	message = strings.ToUpper(message)
+
+	base := byte('A')
 
 	//Разбиваем сообщение на пары символов
 	pairs := make([][]int, len(message)/2)
 	for i := 0; i < len(message); i += 2 {
-		pairs[i/2] = []int{int(message[i] - 'a'), int(message[i+1] - 'a')}
+		pairs[i/2] = []int{int(message[i] - base), int(message[i+1] - base)}
 	}
 
 	//Умножаем каждую пару на ключ
 	result := ""
 	for _, pair := range pairs {
 		encryptedPair := multiplyMatrix(keymatrix, [][]int{{pair[0]}, {pair[1]}})
-		result += string(encryptedPair[0][0] + 'a')
-		result += string(encryptedPair[1][0] + 'a')
+		result += string(encryptedPair[0][0] + int(base))
+		result += string(encryptedPair[1][0] + int(base))
 	}
 
 	return result
@@ -34,28 +43,37 @@ func EncryptHill(message, key string) string {
 
 // Функция для дешифрования сообщения
 func DecryptHill(message, key string) string {
+	if strings.Contains(message, " ") {
+		return "Wrong input message"
+	}
+	if !IsLetter(message) {
+		return "Wrong input message"
+	}
+	if IsLetter(key) {
+		return "Wrong input key"
+	}
+
 	keyslice := invert(key)
 	keymatrix := getMatrixKey(keyslice)
 	//Находим обратную матрицу
 	inverseKey := inverseMatrix(keymatrix)
-
+	message = strings.ReplaceAll(message, " ", "")
+	base := byte('A')
 	//Разбиваем сообщение на пары символов
 	pairs := make([][]int, len(message)/2)
 	for i := 0; i < len(message); i += 2 {
-		pairs[i/2] = []int{int(message[i] - 'a'), int(message[i+1] - 'a')}
+		pairs[i/2] = []int{int(message[i] - base), int(message[i+1] - base)}
 	}
 
 	//Умножаем каждую пару на обратный ключ
 	result := ""
 	for _, pair := range pairs {
 		decryptedPair := multiplyMatrix(inverseKey, [][]int{{pair[0]}, {pair[1]}})
-		result += string(decryptedPair[0][0] + 'a')
-		result += string(decryptedPair[1][0] + 'a')
+		result += string(decryptedPair[0][0] + int(base))
+		result += string(decryptedPair[1][0] + int(base))
 	}
 
-	if len(result)%2 == 0 {
-		result = result[:len(result)-1]
-	}
+	result = removePadding(result)
 	return result
 }
 
