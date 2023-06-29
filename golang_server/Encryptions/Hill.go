@@ -16,6 +16,9 @@ func EncryptHill(message, key string) string {
 		return "Wrong input key"
 	}
 	keyslice := invert(key)
+	if keyslice[0] * keyslice[2] - keyslice[1] * keyslice[3] == 0 {
+		return "Wrong input key"
+	}
 	keymatrix := getMatrixKey(keyslice)
 
 	//Добавляем недостающие символы

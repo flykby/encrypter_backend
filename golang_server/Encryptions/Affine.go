@@ -14,7 +14,14 @@ func EncryptAffine(message, key string) string {
 	if IsLetter(key) {
 		return "Wrong input key"
 	}
+
 	keyslice := invert(key)
+	rule := []int{2, 4, 6, 8, 10, 12, 13, 14, 16, 18, 20, 22, 23, 24}
+	for _, x := range rule {
+		if keyslice[0] == x {
+			return "Wrong input key"
+		}
+	}
 
 	encryptedMessage := ""
 	for i := 0; i < len(message); i++ {
@@ -34,6 +41,12 @@ func DecryptAffine(message, key string) string {
 		return "Wrong input key"
 	}
 	keyslice := invert(key)
+	rule := []int{2, 4, 6, 8, 10, 12, 13, 14, 16, 18, 20, 22, 23, 24}
+	for _, x := range rule {
+		if keyslice[0] == x {
+			return "Wrong input key"
+		}
+	}
 
 	decryptedMessage := ""
 	inverseA := inverseElement(keyslice[0], 26)
