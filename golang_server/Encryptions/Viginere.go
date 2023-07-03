@@ -7,13 +7,6 @@ import (
 // Зашифровка
 func EncryptVigenere(message, key string) string {
 	key = strings.ReplaceAll(key, " ", "")
-	if strings.Contains(key, " ") {
-		return "Wrong input key"
-	}
-
-	if !IsLetter(key) {
-		return "Wrong input key"
-	}
 
 	keyrune := []rune(key)
 	encrypted := ""
@@ -39,9 +32,6 @@ func EncryptVigenere(message, key string) string {
 func DecryptVigenere(message string, key string) string {
 	key = strings.ReplaceAll(key, " ", "")
 	if strings.Contains(key, " ") {
-		return "Wrong input key"
-	}
-	if !IsLetter(key) {
 		return "Wrong input key"
 	}
 

@@ -1,11 +1,8 @@
 package encodings
 
 import (
-	"regexp"
 	"strings"
 )
-
-var IsLetter = regexp.MustCompile(`^[a-zA-Z]+$`).MatchString
 
 const (
 	KEY     = 1
@@ -29,12 +26,7 @@ func updateinfo(info string, def int) string {
 func EncryptPlayfair(message, key string) string {
 	key = updateinfo(key, KEY)
 	message = updateinfo(message, MESSAGE)
-	if !IsLetter(message) {
-		return "Wrong input message"
-	}
-	if !IsLetter(key) {
-		return "Wrong input key"
-	}
+
 	keymatrix := generateKeyMatrix(key)
 	encrypted := ""
 	for i := 0; i < len(message); i += 2 {
@@ -58,13 +50,6 @@ func EncryptPlayfair(message, key string) string {
 
 // Расшифровка
 func DecryptPlayfair(message, key string) string {
-	if !IsLetter(message) {
-		return "Wrong input message"
-	}
-	if !IsLetter(key) {
-		return "Wrong input key"
-	}
-
 	key = updateinfo(key, KEY)
 	keymatrix := generateKeyMatrix(key)
 

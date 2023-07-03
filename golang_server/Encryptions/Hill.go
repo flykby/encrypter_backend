@@ -9,14 +9,9 @@ import (
 // Функция для шифрования сообщения
 func EncryptHill(message, key string) string {
 	message = strings.ReplaceAll(message, " ", "")
-	if !IsLetter(message) {
-		return "Wrong input message"
-	}
-	if IsLetter(key) {
-		return "Wrong input key"
-	}
+
 	keyslice := invert(key)
-	if keyslice[0] * keyslice[2] - keyslice[1] * keyslice[3] == 0 {
+	if keyslice[0]*keyslice[2]-keyslice[1]*keyslice[3] == 0 {
 		return "Wrong input key"
 	}
 	keymatrix := getMatrixKey(keyslice)
@@ -48,12 +43,6 @@ func EncryptHill(message, key string) string {
 func DecryptHill(message, key string) string {
 	if strings.Contains(message, " ") {
 		return "Wrong input message"
-	}
-	if !IsLetter(message) {
-		return "Wrong input message"
-	}
-	if IsLetter(key) {
-		return "Wrong input key"
 	}
 
 	keyslice := invert(key)

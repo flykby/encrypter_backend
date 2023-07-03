@@ -8,12 +8,6 @@ import (
 // Функция для шифрования сообщения
 func EncryptAffine(message, key string) string {
 	message = strings.ReplaceAll(message, " ", "")
-	if !IsLetter(message) {
-		return "Wrong input message"
-	}
-	if IsLetter(key) {
-		return "Wrong input key"
-	}
 
 	keyslice := invert(key)
 	rule := []int{2, 4, 6, 8, 10, 12, 13, 14, 16, 18, 20, 22, 23, 24}
@@ -34,12 +28,7 @@ func EncryptAffine(message, key string) string {
 // Функция для дешифрования сообщения
 func DecryptAffine(message, key string) string {
 	message = strings.ReplaceAll(message, " ", "")
-	if !IsLetter(message) {
-		return "Wrong input message"
-	}
-	if IsLetter(key) {
-		return "Wrong input key"
-	}
+
 	keyslice := invert(key)
 	rule := []int{2, 4, 6, 8, 10, 12, 13, 14, 16, 18, 20, 22, 23, 24}
 	for _, x := range rule {
