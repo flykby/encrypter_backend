@@ -1,13 +1,15 @@
 package encodings
 
 import (
+	"regexp"
 	"strings"
 )
+
+var IsLetter = regexp.MustCompile(`^[a-zA-Z]+$`).MatchString
 
 // Зашифровка
 func EncryptVigenere(message, key string) string {
 	key = strings.ReplaceAll(key, " ", "")
-
 	keyrune := []rune(key)
 	encrypted := ""
 	keyIndex := 0
@@ -31,10 +33,6 @@ func EncryptVigenere(message, key string) string {
 // Расшифровка
 func DecryptVigenere(message string, key string) string {
 	key = strings.ReplaceAll(key, " ", "")
-	if strings.Contains(key, " ") {
-		return "Wrong input key"
-	}
-
 	keyrune := []rune(key)
 	decrypted := ""
 	keyIndex := 0

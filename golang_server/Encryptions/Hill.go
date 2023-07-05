@@ -1,27 +1,58 @@
 package encodings
 
 import (
+	"fmt"
 	"math"
 	"strconv"
 	"strings"
 )
 
+func updateinfoHill(info string, def int) string {
+	info = strings.ReplaceAll(info, " ", "")
+	info = addPadding(info)
+	info = strings.ToUpper(info)
+	return info
+}
+
+// Поиск кратного
+func gcd(a, b int) int {
+	if b == 0 {
+		return a
+	} else {
+		return gcd(b, a%b)
+	}
+}
+
+func CheckHill(message string, keyslice []int) string {
+	if !IsLetter(message) {
+		return "Wrong message. Сообщение содержит цифры"
+	}
+
+	determinate := keyslice[0]*keyslice[3] - keyslice[1]*keyslice[2]
+	if determinate == 0 {
+		return "Wrong input key. Определитель равен 0"
+	}
+
+	divider := gcd(determinate, 26)
+	fmt.Println(determinate, divider)
+	if divider != 1 && determinate != 1 && divider != -1 && determinate != -1 {
+		return "Wrong input key. Определитель и 26 имеют общий определитель"
+	}
+	return ""
+}
+
 // Функция для шифрования сообщения
 func EncryptHill(message, key string) string {
-	message = strings.ReplaceAll(message, " ", "")
-
+	message = updateinfoHill(message, MESSAGE)
 	keyslice := invert(key)
-	if keyslice[0]*keyslice[2]-keyslice[1]*keyslice[3] == 0 {
-		return "Wrong input key"
+	err := CheckHill(message, keyslice)
+
+	if err != "" {
+		return err
 	}
+
 	keymatrix := getMatrixKey(keyslice)
-
-	//Добавляем недостающие символы
-	message = addPadding(message)
-	message = strings.ToUpper(message)
-
 	base := byte('A')
-
 	//Разбиваем сообщение на пары символов
 	pairs := make([][]int, len(message)/2)
 	for i := 0; i < len(message); i += 2 {
@@ -46,9 +77,16 @@ func DecryptHill(message, key string) string {
 	}
 
 	keyslice := invert(key)
+	err := CheckHill(message, keyslice)
+
+	if err != "" {
+		return err
+	}
+
 	keymatrix := getMatrixKey(keyslice)
 	//Находим обратную матрицу
 	inverseKey := inverseMatrix(keymatrix)
+	fmt.Println(inverseKey)
 	message = strings.ReplaceAll(message, " ", "")
 	base := byte('A')
 	//Разбиваем сообщение на пары символов
@@ -141,8 +179,10 @@ func multiplyMatrix(matrix1 [][]int, matrix2 [][]int) [][]int {
 		for j := 0; j < len(matrix2[0]); j++ {
 			for k := 0; k < len(matrix2); k++ {
 				result[i][j] += matrix1[k][i] * matrix2[k][j]
+
 			}
 			result[i][j] = int(mod(int(result[i][j]), 26))
+
 		}
 	}
 

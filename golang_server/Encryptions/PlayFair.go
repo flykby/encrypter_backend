@@ -9,23 +9,38 @@ const (
 	MESSAGE = 2
 )
 
-func updateinfo(info string, def int) string {
+func updateinfoPlayFair(info string, def int) string {
 	info = strings.ToUpper(info)
 	info = strings.ReplaceAll(info, " ", "")
 	info = strings.ReplaceAll(info, "J", "I")
 	if def == MESSAGE {
 		info = removeDouble(info)
 		info = addPadding(info)
-	} else {
+	}
+	if def == KEY {
 		info = removeDuplicates(info)
 	}
 	return info
 }
 
+func CheckPlayFair(message, key string) string {
+	if !IsLetter(message) {
+		return "Wrong message. Сообщение содержит цифры или спец.символы"
+	}
+	if !IsLetter(key) {
+		return "Wrong key. Ключ содержит цифры или спец.символы"
+	}
+	return ""
+}
+
 // Зашифровка
 func EncryptPlayfair(message, key string) string {
-	key = updateinfo(key, KEY)
-	message = updateinfo(message, MESSAGE)
+	key = updateinfoPlayFair(key, KEY)
+	message = updateinfoPlayFair(message, MESSAGE)
+	err := CheckPlayFair(message, key)
+	if err != "" {
+		return err
+	}
 
 	keymatrix := generateKeyMatrix(key)
 	encrypted := ""
@@ -50,11 +65,14 @@ func EncryptPlayfair(message, key string) string {
 
 // Расшифровка
 func DecryptPlayfair(message, key string) string {
-	key = updateinfo(key, KEY)
+	key = updateinfoPlayFair(key, KEY)
+	message = updateinfoPlayFair(message, MESSAGE)
+	err := CheckPlayFair(message, key)
+	if err != "" {
+		return err
+	}
+
 	keymatrix := generateKeyMatrix(key)
-
-	message = updateinfo(message, MESSAGE)
-
 	decrypted := ""
 	for i := 0; i < len(message); i += 2 {
 		a := message[i]
